@@ -4,6 +4,8 @@ STATUS
 	* Analytical is 5 credit hours
 	* Tomorrow's exam covers 6 chapters of chemical 
 	  equilibria systems
+	* If I make significant progress tonight, I'll work
+	  on our project a bit more
 
 * Yes, Brandon will finish this, but it's _not_ an 
   immediate priority anymore.
