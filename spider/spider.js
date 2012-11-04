@@ -23,8 +23,6 @@ var RQ = [];
  */
 var Page = function(uri) 
 {
-	var that = this;
-
 	this.uri = uri;
 	this.uriP = null; // cached parsed URL
 	this.doc = '';
@@ -46,12 +44,19 @@ var Page = function(uri)
 		}
 		return !!this.uriP.hostname.match(domain);
 	}
+
+	/**
+	 * If page is available.
+	 */
+	this.isOnline = function() {
+		return (this.status == 200);
+	}
 	
 	/**
 	 * The page is delivered as a stream.
 	 */
 	this.processChunk = function(chunk) {
-		this.doc += chunk;
+		_this.doc += chunk;
 	}
 
 	/**
@@ -60,17 +65,16 @@ var Page = function(uri)
 	 */
 	this.endPage = function() {
 		try {
-			var th = this;
-			if(!this.doc) {
-				console.log("Page error: " + this.uri);
+			if(!_this.doc) {
+				console.log("Page error: " + _this.uri);
 				return;
 			}
-			console.log("Page recieved: " + this.doc.length);
+			console.log("Recieved: " + _this.doc.length);
 
 			jsdom.env({
-				html: th.doc,
+				html: _this.doc,
 				src: [jquery],
-				done: that.parseLinks,
+				done: _this.parseLinks,
 			});
 		}
 		catch(e) {
@@ -83,7 +87,6 @@ var Page = function(uri)
 	 */
 	this.parseLinks = function(err, window) {
 		try {
-			var th = this;
 			var $ = window.$;
 			
 			$('a').each(function(l) {
@@ -91,12 +94,16 @@ var Page = function(uri)
 				if(!l) {
 					return true; // continue
 				}
-				that.linksOut.push(url.resolve(that.uri, l));
+				var ll = url.parse(l); // FIXME: Doing twice
+				if(ll.protocol != 'http:') { // TODO: https
+					return true; // continue;
+				}
+				_this.linksOut.push(url.resolve(_this.uri, l));
 			})
-			.promise().done(that.processLinks);
+			.promise().done(_this.processLinks);
 		}
 		catch(e) {
-			// nothing
+			console.log("EXCEPTION: parseLinks");
 		}
 	}
 
@@ -104,14 +111,12 @@ var Page = function(uri)
 	 * Processes links after they've been parsed out.
 	 */
 	this.processLinks = function() {
-		if(!that.isOnDomain('spsu.edu')) {
+		if(!_this.isOnDomain('spsu.edu')) {
 			return;
 		}
-		//console.log(that.uri.substr(6,26) 
-		//		+ "\t>> LINKS: " + that.linksOut.length);
 
-		for(var i in that.linksOut) {
-			var u = that.linksOut[i];
+		for(var i in _this.linksOut) {
+			var u = _this.linksOut[i];
 			var p = null;
 			if(!(u in DB)) {
 				p = new Page(u);
@@ -120,7 +125,7 @@ var Page = function(uri)
 			}
 			else {
 				p = DB[u];
-				p.linksIn.push(that.uri);
+				p.linksIn.push(_this.uri);
 			}
 		}
 
@@ -149,16 +154,19 @@ var Page = function(uri)
 		path: u.path,
 	};
 
+	var _this = this;
+
 	this.request = http.request(ops, function(res) {
-		that.headers = JSON.stringify(res.headers);
-		that.status = res.statusCode;
+		_this.headers = JSON.stringify(res.headers);
+		_this.status = res.statusCode;
 		res.setEncoding('utf8');
-		res.on('data', that.processChunk);
-		res.on('end', that.endPage);
+		res.on('data', _this.processChunk);
+		res.on('end', _this.endPage);
 	});
 
 	this.request.on('error', function(e) {
-		// TODO
+		// Typically a connection error.
+		_this.status = -100;
 	});
 }
 
@@ -170,10 +178,12 @@ var QueueItem = function(uri, depth) {
 	this.depth = depth;
 }
 
+/**
+ * Proceses any queue items
+ */
 var processQueue = function() {
 	while(RQ.length) {
 		var item = RQ.shift();
-		//console.log("* Processing item");
 		if(item.uri in DB && DB[item.uri].fetched) {
 			continue;
 		}
@@ -182,12 +192,44 @@ var processQueue = function() {
 	}
 }
 
+/**
+ * Prints reports on the database.
+ */
+var reportStats = function() {
+	var i = 0;
+	for(var x in DB) {
+		i++;
+	}
+
+	console.log("=====================");
+	console.log("DB size:\t" + i);
+	console.log("RQ size:\t" + RQ.length);
+	console.log("=====================");
+}
+
+/**
+ * Prints every entry in the database
+ */
+var reportFull = function() {
+	i = 0;
+	for(var x in DB) {
+		var p = DB[x];
+		console.log(i + ") " 
+				+ x.substr(7, 40) 
+				+ "  "
+				+ p.status
+		);
+		i++;
+	}
+}
+
 var main = function() 
 {
-	//console.log(RQ);
-
 	RQ.push(new QueueItem('http://spsu.edu', 0));
 	processQueue();
+
+	setInterval(reportStats, 10*1000);
+	setInterval(reportFull, 6*1000);
 }
 
 main();
