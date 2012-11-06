@@ -1,0 +1,70 @@
+{extends file="BASE.html"}
+
+{block name=title}File Gallery{/block}
+
+{block name=extraheader}
+<link href="/css/jquery.dataTables.css" rel="stylesheet">
+{/block}
+
+{block name=extrascript}
+<script src="/js/jquery.dataTables.min.js"></script>
+<script>
+	$(function() {
+		// Data table init
+		$('.table').dataTable({
+			"bPaginate": false,
+			"bLengthChange": true,
+			"bFilter": true,
+			"bSort": true,
+			"bInfo": true,
+			"bAutoWidth": true,
+	        "bStateSave": true
+		});
+	});
+</script>
+{/block}
+
+{block name=content}
+
+<div id="file-uploader">
+	Upload Files By Dragging them Here.
+</div>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>icon</th>
+			<th>name</th>
+			<th>type</th>
+			<th>date</th>
+		</tr>
+	</thead>
+	<tbody>
+	{foreach $uploads as $f}
+	<tr>
+		<td class="icon">
+			<a href="/view/{$f->hash}"><img src="{$f->getThumbUrl()}"></a>
+		</td>
+		<td>
+			<a href="/view/{$f->hash}">{$f->filename_orig}</a>
+		</td>
+		<td class="center">
+			{$f->filetype}
+		</td>
+		<td class="center">
+			{$f->datetime_uploaded|date_format:"%b %e, %Y<br>%T"}
+		</td>
+	</tr>
+	{/foreach}
+	</tbody>
+	<tfoot>
+		<tr>
+			<th>icon</th>
+			<th>name</th>
+			<th>type</th>
+			<th>date</th>
+		</tr>
+	</tfoot>
+</table>
+
+{/block}

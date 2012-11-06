@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Forager &mdash; 
+			{block name=title}Untitled Page{/block}</title>
+		<meta name="viewport" 
+				content="width=device-width, initial-scale=1.0">
+		<link href="/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/css/bootstrap-responsive.min.css"
+				rel="stylesheet">
+		<link href="/css/theme.css" rel="stylesheet">
+		{block name=extraheader}{/block}
+	</head>
+	<body>
+		<div id="wrap" class="container-fluid">
+
+			<header id="header">
+				<div class="navbar">
+					<div class="navbar-inner">
+						<a class="brand" 
+							href="/">Forager</a>
+						<ul class="nav">
+							<li class="active"><a 
+								href="/">Home</a></li>
+							
+							{if $admin->isAdmin()}
+							<li>
+								<a href="/logout">Log out</a>
+							</li>
+							{/if}
+						</ul>
+					</div>
+				</div>
+			</header>
+
+			<div id="main">
+				{block name=content}{/block}
+			</div>
+
+			<footer id="footer" class="muted">
+			<p>Usage of this website constitutes agreement to the 
+			<a href="/legal">terms of use</a>.</p>
+			<p>Copyright &copy; 2012 <a 
+				href="http://spsu.edu">Southern Polytechnic 
+				State University</a>. All rights reserved.</p>
+			</footer>
+		</div>
+		<!-- Modern HTML practice always places JS at the bottom of 
+			 the <body> element for a more responsive UX. --> 
+		<script src="/js/jquery.min.js"></script>
+		<script src="/js/bootstrap.min.js"></script>
+		{block name=extrascript}{/block}
+	</body>
+
+</html>

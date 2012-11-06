@@ -1,0 +1,29 @@
+{extends file="BASE.html"}
+
+{block name=title}Install Script{/block}
+
+{block name=content}
+
+<h1>Honeycomb database installation</h1>
+<hr>
+{if !$didinstall}
+	<p>Install the database now?</p>
+	<p><em>This will drop the current database and all of 
+		the information it contains.</em></p>
+
+	<br>
+	<form name="install" action="" method="post">
+		<input type="hidden" name="install" value="true">
+		<input type="submit" value="Install">
+	</form>
+
+{else}
+	{$message}
+	<br>
+	<ul>
+		<li>Back to <a href="/">index</a></li>
+		<li>Back to <a href="/install">installation</a></li>
+	</ul>
+{/if}
+
+{/block}

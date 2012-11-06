@@ -1,0 +1,102 @@
+html, body {
+}
+
+#wrap {
+}
+
+#header {
+}
+
+#main {
+	padding: 10px;
+}
+
+#footer {
+	padding-top:20px;
+	font-size: 0.85em;
+	text-align: center;
+} 
+
+#footer p {
+	padding: 0px;
+	margin: 0px;
+}
+
+.hero-unit {
+	background-image: url('/img/spsu025.png');
+	background-size: cover;
+	background-position: center center;
+	border-radius: 12px;
+}
+
+.main-login {
+	background-color: #eef5ee;
+	padding: 0px 10px 0px 10px;
+	border-radius: 12px;
+}
+
+.legal {
+	text-transform: uppercase;
+}
+
+.table .icon img {
+	max-width: 100px;
+	max-height: 100px;
+}
+
+.table .center {
+	text-align: center;
+}
+
+.file-upload {
+	color: #fff;
+}
+
+/* =================== FOR BUTTONS ============== */
+
+.buttonrow {
+	margin-bottom: 10px;
+}
+
+.button {
+	text-align: center;
+	border-radius: 25px;
+	padding: 10px;
+	font-weight: bold;
+}
+
+.graybg, .graybg a{
+	background-color: #777;
+	color: #fff;
+}
+
+.redbg, .redbg a {
+	background-color: #a77;
+	color: #fff;
+}
+
+.yellowbg, .yellowbg a {
+	background-color: #aa7;
+	color: #fff;
+}
+
+.greenbg, .greenbg a {
+	background-color: #7a7;
+	color: #fff;
+}
+
+.test {
+	border: 1px solid #f00;
+}
+
+.gallery {
+	text-align: center;
+}
+
+.gallery-item {
+	width: 200px;
+	height: 200px;
+	border: 1px solid #f00;
+	margin: 10px;
+	display: run-in;
+}
